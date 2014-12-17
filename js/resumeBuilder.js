@@ -8,7 +8,7 @@ var bio = {
 							"blog" : "http://superawesomegood.com" },
 			"pictureurl" : "http://superawesomegood.com/wp-content/uploads/2010/09/IMG_20130226_211504.jpg",
 			"skills" : ["HTML", "CSS", "JavaScript", "jQuery", "Sass", "git", "Bootstrap"]
-			};
+};
 
 var work = { "positions" : [ 
               { "name" : "Senior Technical Writer",
@@ -45,34 +45,58 @@ var education = { "schools" : [
   					"school" : "Udacity",
   					"dates" : "December 2014",
   					"url" : ""
-					}]};
+					}]
+};
 				
 var projects = { "projects" : [
           { "title" : "shaunandmaura.com",
             "date" : "12/13/14",
             "description" : "Single page, responsive design.",
             "images" : []
-          }]};
-
-var formattedName = HTMLheaderName.replace("%data%", bio.name);
-var formattedRole = HTMLheaderRole.replace("%data%", bio.role);
-
-var formattedContact = "";
-var formattedSkills = "";
-
-$('#header').prepend(formattedRole);
-$('#header').prepend(formattedName);
+          },
+          {
+            "title" : "Pico Portfolio",
+            "date" : "2014",
+            "description" : "A plugin for Pico CMS that lets you create awesome portfolios.",
+            "images" : []
+          }]
+};
 
 
-
-if (bio.skills != undefined) {
-  $('#header').append(HTMLskillsStart);
-  // Generate formatted skills list
-  for (var i = 0; i < bio.skills.length; i++) {
-  	formattedSkills += HTMLskills.replace('%data%', bio.skills[i]);
+bio.display = function() {
+  var formattedName = HTMLheaderName.replace("%data%", bio.name);
+  var formattedRole = HTMLheaderRole.replace("%data%", bio.role);
+  
+  var formattedContact = "";
+  var formattedSkills = "";
+  var formattedImg = "";
+  
+  $('#header').prepend(formattedRole);
+  $('#header').prepend(formattedName);
+  
+  if (bio.pictureurl) {
+    formattedImg = HTMLbioPic.replace('%data%', bio.pictureurl);
+    $('#header').append(formattedImg);
   }
-  $('#skills').append(formattedSkills);
-}
+  
+  if (bio.skills != undefined) {
+    $('#header').append(HTMLskillsStart);
+    // Generate formatted skills list
+    for (var i = 0; i < bio.skills.length; i++) {
+    	formattedSkills += HTMLskills.replace('%data%', bio.skills[i]);
+    }
+    $('#skills').append(formattedSkills);
+  }
+  
+  for (var contact in bio.contact) {
+  	var replacement = HTMLcontactGeneric.replace('%contact%', contact);
+  	var replacement = replacement.replace('%data%', bio.contact[contact]);
+  	formattedContact += replacement;
+  }
+  $('#topContacts').prepend(formattedContact);
+};
+bio.display();
+
 
 
 projects.display = function() {
@@ -104,16 +128,12 @@ $('#map');
 
 
 // Generate formatted contact list
-for (var contact in bio.contact) {
-	var replacement = HTMLcontactGeneric.replace('%contact%', contact);
-	var replacement = replacement.replace('%data%', bio.contact[contact]);
-	formattedContact += replacement;
-}
 
 
 
 
-$('#topContacts').prepend(formattedContact);
+
+
 
 $('#skills').append(formattedSkills);
 $('#workExperience').append(work["position"]);
